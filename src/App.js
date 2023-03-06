@@ -3,8 +3,9 @@ import './css/App.css';
 
 function App() {
   const [ conteudo, setConteudo ] = useState(<></>)
+  // 1 - criar busca
+  const [ busca, setBusca ] = useState('');
 
-  // 2 - Criar apenas um tradutor
   function getGenero(genero) {
     switch (genero) {
       case 'Male':
@@ -54,7 +55,7 @@ function App() {
     }
   }
 
-
+  // 3 colocar variavel busca na url
   async function carregarTodosPersonagens() {
     var requestOptions = {
       method: 'GET',
@@ -62,7 +63,7 @@ function App() {
     };
     
     const result = await fetch(
-      "https://rickandmortyapi.com/api/character",
+      "https://rickandmortyapi.com/api/character"+busca,
       requestOptions
     )
       .then(response => response.text())
@@ -91,7 +92,6 @@ function App() {
         <div>
           <div className='lista-secundaria'>
             <b>Participações:</b>
-            {/* 1 - Mostrar a resposta do desafio anterior */ }
             { personagem.episode.map(
               ep => 
                   <span key={personagem.name+(ep.split('episode/'))[1]}>
@@ -110,7 +110,7 @@ function App() {
       setConteudo(await listaPersonagens())
     }
     getConteudo()
-  }, [])
+  }, [busca])
 
   return (
     <div className="App">
@@ -118,12 +118,12 @@ function App() {
         <h1>Rick and Morty API</h1>
         <h2><a href='/'>Personagens</a></h2>
       </header>
-      {/* 1 - Colocar os filtros aqui */}
       <div className='filtros'>
         <span className='filtros-titulo'>Filtros</span>
         <div className='filtro status'>
           <b>Status:</b>
-          <span>Vivo</span>
+          {/* 2 - Criar função onclick  */}
+          <span onClick={() => setBusca('?status=live')}>Vivo</span>
           <span>Morto</span>
           <span>Desconhecido</span>
         </div>
