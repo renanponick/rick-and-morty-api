@@ -1,101 +1,68 @@
 import { useEffect, useState } from 'react';
 import './css/App.css';
 
-const mock = [
-  {
-    "id": 1,
-    "name": "Rick Sanchez",
-    "status": "Alive",
-    "species": "Human",
-    "type": "",
-    "gender": "Male",
-    "origin": {
-        "name": "Earth (C-137)",
-        "url": "https://rickandmortyapi.com/api/location/1"
-    },
-    "location": {
-        "name": "Citadel of Ricks",
-        "url": "https://rickandmortyapi.com/api/location/3"
-    },
-    "image": "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-    "episode": [
-        "https://rickandmortyapi.com/api/episode/1",
-        "https://rickandmortyapi.com/api/episode/2"
-    ],
-    "url": "https://rickandmortyapi.com/api/character/1",
-    "created": "2017-11-04T18:48:46.250Z"
-  },
-  {
-      "id": 2,
-      "name": "Morty Smith",
-      "status": "Alive",
-      "species": "Human",
-      "type": "",
-      "gender": "Male",
-      "origin": {
-          "name": "unknown",
-          "url": ""
-      },
-      "location": {
-          "name": "Citadel of Ricks",
-          "url": "https://rickandmortyapi.com/api/location/3"
-      },
-      "image": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-      "episode": [
-          "https://rickandmortyapi.com/api/episode/1",
-          "https://rickandmortyapi.com/api/episode/2",
-          "https://rickandmortyapi.com/api/episode/3",
-          "https://rickandmortyapi.com/api/episode/4",
-          "https://rickandmortyapi.com/api/episode/1",
-          "https://rickandmortyapi.com/api/episode/2",
-          "https://rickandmortyapi.com/api/episode/3",
-          "https://rickandmortyapi.com/api/episode/4",
-          "https://rickandmortyapi.com/api/episode/1",
-          "https://rickandmortyapi.com/api/episode/2",
-          "https://rickandmortyapi.com/api/episode/3",
-          "https://rickandmortyapi.com/api/episode/4",
-          "https://rickandmortyapi.com/api/episode/1",
-          "https://rickandmortyapi.com/api/episode/2",
-          "https://rickandmortyapi.com/api/episode/3",
-          "https://rickandmortyapi.com/api/episode/4",
-          "https://rickandmortyapi.com/api/episode/1",
-          "https://rickandmortyapi.com/api/episode/2",
-          "https://rickandmortyapi.com/api/episode/3",
-          "https://rickandmortyapi.com/api/episode/4",
-      ],
-      "url": "https://rickandmortyapi.com/api/character/2",
-      "created": "2017-11-04T18:50:21.651Z"
-  },
-]
-
 function App() {
   const [ conteudo, setConteudo ] = useState(<></>)
 
-  function carregarTodosPersonagens() {
-    return mock
+  // 2 - Explica o fetch e cria os async await
+  async function carregarTodosPersonagens() {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    const result = await fetch(
+      "https://rickandmortyapi.com/api/character",
+      requestOptions
+    )
+      .then(response => response.text())
+      .then(result => { return result })
+      .catch(error => console.log('error', error));
+
+    const char = JSON.parse(result)
+
+    return char.results
   }
 
-  // 2 - Cria a função da lista div vazia
-  // 3 - Cria o Mock
-  function listaPersonagens() {
-    const todosPersonagens = carregarTodosPersonagens()
+  async function listaPersonagens() {
+    const todosPersonagens = await carregarTodosPersonagens()
 
+    // 1 - Arrumar essa listagem principal
     return todosPersonagens.map(personagem =>
-      <div key={personagem.id}>
-        {personagem.name}
+      <div className='card char' key={personagem.id}>
+        <img src={personagem.image} alt={personagem.name}/>
+
+        <h2>{personagem.name}</h2>
+
+        <div className='char-info'>
+          <span><b>Espécie: </b>{personagem.species}</span>
+          <span><b>Gênero: </b>{personagem.gender}</span>
+        </div>
+
+        <div>
+          <div className='lista-secundaria'>
+            <b>Participações:</b>
+            {/* Desafio da aula 
+            { personagem.episode.map(
+              ep => 
+                  <span key={personagem.name+(ep.split('episode/'))[1]}>
+                    Ep-{ (ep.split('episode/'))[1] }
+                  </span>
+            ) }*/}
+          </div>
+          <h5><b>Status: </b> {personagem.status}</h5>
+        </div>
       </div>
     )
   }
 
-  // 4 - Cria a função para carregar as coisas
   useEffect(() => {
-    function getConteudo() {
-      setConteudo(listaPersonagens())
+    async function getConteudo() {
+      setConteudo(await listaPersonagens())
     }
     getConteudo()
   }, [])
 
-  // 1- Ajusta o HTML
   return (
     <div className="App">
       <header className="cabecalho">
