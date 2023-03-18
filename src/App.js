@@ -4,7 +4,7 @@ import './css/App.css';
 function App() {
   const [ conteudo, setConteudo ] = useState(<></>)
 
-  // 2 - Criar apenas um tradutor
+  // DESAFIO
   function getGenero(genero) {
     switch (genero) {
       case 'Male':
@@ -54,7 +54,7 @@ function App() {
     }
   }
 
-
+  // 3 - Explicar o FETCH
   async function carregarTodosPersonagens() {
     var requestOptions = {
       method: 'GET',
@@ -77,6 +77,7 @@ function App() {
   async function listaPersonagens() {
     const todosPersonagens = await carregarTodosPersonagens()
 
+    // 1 Corrigir lista de personagem
     return todosPersonagens.map(personagem =>
       <div className='card char' key={personagem.id}>
         <img src={personagem.image} alt={personagem.name}/>
@@ -91,7 +92,7 @@ function App() {
         <div>
           <div className='lista-secundaria'>
             <b>Participações:</b>
-            {/* 1 - Mostrar a resposta do desafio anterior */ }
+            {/* 4 - DESAFIO */ }
             { personagem.episode.map(
               ep => 
                   <span key={personagem.name+(ep.split('episode/'))[1]}>
@@ -118,7 +119,7 @@ function App() {
         <h1>Rick and Morty API</h1>
         <h2><a href='/'>Personagens</a></h2>
       </header>
-      {/* 1 - Colocar os filtros aqui */}
+      {/* 2 - Colocar os filtros aqui */}
       <div className='filtros'>
         <span className='filtros-titulo'>Filtros</span>
         <div className='filtro status'>
