@@ -131,6 +131,7 @@ function App() {
       setConteudo(await listaPersonagens())
     }
     getConteudo()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busca])
 
   return (
